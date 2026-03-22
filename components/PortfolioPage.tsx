@@ -15,6 +15,7 @@ export function PortfolioPage() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [isMeltdown, setIsMeltdown] = useState(false);
   const [showReloadPrompt, setShowReloadPrompt] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const workSectionRef = useRef<HTMLElement | null>(null);
   const loaderNameRef = useRef<HTMLDivElement | null>(null);
   const loaderSubRef = useRef<HTMLDivElement | null>(null);
@@ -43,6 +44,22 @@ export function PortfolioPage() {
     document.documentElement.setAttribute("data-theme", theme);
     window.localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 640) setIsMobileMenuOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     if (!ready) return;
@@ -201,13 +218,26 @@ export function PortfolioPage() {
         <a href="#home" className="nav-name">
           ADITYA
         </a>
-        <nav className="nav-links">
+        <button
+          type="button"
+          className="nav-menu-btn"
+          aria-label="Toggle navigation menu"
+          onClick={() => setIsMobileMenuOpen((v) => !v)}
+        >
+          {isMobileMenuOpen ? "Close" : "Menu"}
+        </button>
+        <nav className={`nav-links ${isMobileMenuOpen ? "open" : ""}`}>
           {navItems.map((item) => (
-            <Link key={item.id} href={`#${item.id}`} className={active === item.id ? "active" : ""}>
+            <Link
+              key={item.id}
+              href={`#${item.id}`}
+              className={active === item.id ? "active" : ""}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
               {item.label}
             </Link>
           ))}
-          <a className="nav-cta" href={`mailto:${profile.email}`}>
+          <a className="nav-cta" href={`mailto:${profile.email}`} onClick={() => setIsMobileMenuOpen(false)}>
             Contact
           </a>
           <button
@@ -220,6 +250,12 @@ export function PortfolioPage() {
           </button>
         </nav>
       </header>
+      <button
+        type="button"
+        className={`mobile-nav-backdrop ${isMobileMenuOpen ? "show" : ""}`}
+        aria-label="Close menu backdrop"
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
 
       <main className={`main ${mainVisible ? "show" : ""}`}>
         <section id="home" className="hero">

@@ -186,6 +186,22 @@ body::after {
   gap: 24px;
 }
 
+.nav-menu-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--ink) 40%, transparent);
+  color: var(--ink);
+  padding: 7px 12px;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.mobile-nav-backdrop {
+  display: none;
+}
+
 .nav-links a {
   font-family: var(--font-dm-mono), monospace;
   font-size: 11px;
@@ -1216,49 +1232,190 @@ body::after {
 
 @media (max-width: 640px) {
   .nav {
-    height: auto;
-    padding: 10px 14px;
-    align-items: flex-start;
-    gap: 8px;
-    flex-direction: column;
+    height: 64px;
+    padding: 0 14px;
+    align-items: center;
+    gap: 0;
+    flex-direction: row;
   }
   .nav-name {
     font-size: 17px;
   }
+  .nav-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
   .nav-links {
-    width: 100%;
+    position: fixed;
+    top: 64px;
+    right: 14px;
+    left: 14px;
+    z-index: 1205;
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px 10px;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+    border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+    background: color-mix(in srgb, var(--cream) 92%, var(--pale));
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .nav-links.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
   }
   .nav-links a {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 1px;
+    width: 100%;
+    padding: 8px 6px;
   }
   .nav-cta,
   .nav-theme-btn {
-    padding: 6px 9px;
+    width: 100%;
+    text-align: center;
+    padding: 9px 10px;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    background: rgba(0, 0, 0, 0.32);
+    opacity: 0;
+    pointer-events: none;
+    border: none;
+  }
+  .mobile-nav-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .hero-left {
+    padding-top: 92px;
+    padding-bottom: 40px;
+  }
+  .hero-title {
+    font-size: clamp(38px, 11vw, 56px);
+    line-height: 0.95;
+    letter-spacing: -2px;
+  }
+  .hero-summary {
+    font-size: 15px;
+    line-height: 1.72;
+  }
+  .hero-micro {
+    margin-top: 12px;
     font-size: 9px;
     letter-spacing: 1px;
   }
-  .hero-left {
-    padding-top: 118px;
+  .skills-tape {
+    margin-top: 24px;
   }
-  .hero-title {
-    font-size: clamp(44px, 12vw, 72px);
+  .tape-item {
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 6px 10px;
+  }
+  .hero-cta {
+    margin-top: 26px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .btn-primary,
+  .btn-secondary {
+    display: block;
+    text-align: center;
   }
   .work-item {
     gap: 14px;
     padding-left: 8px;
+    grid-template-columns: 28px 1fr 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
   }
   .work-name {
-    font-size: 22px;
+    font-size: 20px;
+  }
+  .work-desc {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .work-tags {
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .work-tag {
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+  }
+  .sec-title {
+    font-size: 30px;
+  }
+  .sec-meta {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .about-strip {
+    gap: 28px;
+  }
+  .about-title {
+    font-size: clamp(26px, 8vw, 36px);
+  }
+  .about-text {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .code-block {
+    font-size: 11px;
+    line-height: 1.8;
+    padding: 18px 16px;
+    overflow-x: auto;
+  }
+  .stats-row {
+    margin-top: 20px;
+  }
+  .stat-n {
+    font-size: 30px;
+  }
+  .stat-l {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .skill-cell {
+    padding: 16px 10px;
+    font-size: 11px;
+  }
+  .timeline-title {
+    font-size: 20px;
+  }
+  .timeline-sub,
+  .timeline-desc {
+    font-size: 13px;
+    line-height: 1.65;
   }
   .footer {
     gap: 14px;
+    padding-top: 40px;
+    padding-bottom: 70px;
   }
   .sig-style-static .signature-name {
     font-size: 32px;
+  }
+  .dont-touch-btn {
+    width: 100%;
   }
 }
