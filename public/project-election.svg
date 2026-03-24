@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#20163f"/>
+      <stop offset="1" stop-color="#0f1022"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)"/>
+  <rect x="120" y="140" width="960" height="520" rx="22" fill="#171a33" stroke="#7f76ff"/>
+  <g fill="#8ca7ff">
+    <rect x="190" y="220" width="170" height="360" rx="10"/>
+    <rect x="390" y="300" width="170" height="280" rx="10"/>
+    <rect x="590" y="260" width="170" height="320" rx="10"/>
+    <rect x="790" y="340" width="170" height="240" rx="10"/>
+  </g>
+  <polyline points="190,240 390,320 590,280 790,360 960,300" fill="none" stroke="#5cf8c8" stroke-width="12"/>
+  <text x="160" y="105" fill="#d8d5ff" font-size="58" font-family="Arial, sans-serif" font-weight="700">Election Analytics Platform</text>
+</svg>

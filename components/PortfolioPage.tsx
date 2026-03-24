@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { profile, projects, skills } from "./portfolio-data";
 
@@ -12,6 +13,7 @@ export function PortfolioPage() {
   const [active, setActive] = useState<SectionId>("home");
   const [visibleProjects, setVisibleProjects] = useState<string[]>([]);
   const [workProgress, setWorkProgress] = useState(0);
+  const [activeProjectFilter, setActiveProjectFilter] = useState<string>("ALL");
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [isMeltdown, setIsMeltdown] = useState(false);
   const [showReloadPrompt, setShowReloadPrompt] = useState(false);
@@ -29,6 +31,17 @@ export function PortfolioPage() {
       { id: "experience", label: "Journey" }
     ] as const,
     []
+  );
+
+  const projectFilters = useMemo(
+    () => ["ALL", ...Array.from(new Set(projects.map((project) => project.category)))],
+    []
+  );
+
+  const filteredProjects = useMemo(
+    () =>
+      projects.filter((project) => (activeProjectFilter === "ALL" ? true : project.category === activeProjectFilter)),
+    [activeProjectFilter]
   );
 
   useEffect(() => {
@@ -280,16 +293,16 @@ export function PortfolioPage() {
               </div>
             </div>
             <div className="hero-cta">
-              <a href={`mailto:${profile.email}`} className="btn-primary">
-                <span>Say Hello</span>
-              </a>
+              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                 <span>LinkedIn</span>
+                    </a>
               <a href={profile.github} target="_blank" rel="noopener noreferrer" className="btn-secondary">
                 View GitHub →
               </a>
             </div>
             <div className="hero-start-links">
-              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
-                LinkedIn
+              <a href="https://www.instagram.com/adityarajgupta.ig/" target="_blank" rel="noopener noreferrer">
+                Instagram
               </a>
               <a href={`mailto:${profile.email}`}>Email</a>
             </div>
@@ -327,44 +340,45 @@ export function PortfolioPage() {
         <div className="divider" />
 
         <section id="work" ref={workSectionRef} className="work-section reveal-block">
-          <div className="sec-head">
-            <h2 className="sec-title">Selected Work</h2>
+          <div className="projects-head">
+            <h2 className="sec-title">PROJECTS</h2>
             <span className="sec-meta">{projects.length.toString().padStart(2, "0")} PROJECTS</span>
           </div>
-          <div className="work-progress">
-            <span style={{ height: `${workProgress}%` }} />
+          <div className="projects-line">
+            <span />
           </div>
-          <div className="work-list">
-            {projects.map((project) => (
+          <div className="projects-filters">
+            {projectFilters.map((filter) => (
+              <button
+                key={filter}
+                type="button"
+                className={`project-filter-chip ${activeProjectFilter === filter ? "active" : ""}`}
+                onClick={() => setActiveProjectFilter(filter)}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+          <div className="projects-progress">
+            <span style={{ width: `${workProgress}%` }} />
+          </div>
+          <div className="projects-grid">
+            {filteredProjects.map((project) => (
               <a
                 key={project.id}
                 data-project-id={project.id}
-                className={`work-item ${visibleProjects.includes(project.id) ? "visible" : ""}`}
+                className={`project-card ${visibleProjects.includes(project.id) ? "visible" : ""}`}
                 href={project.href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="work-idx">{project.idx}</div>
-                <div>
-                  <h3 className="work-name">{project.name} ↗</h3>
-                  <p className="work-desc">{project.description}</p>
-                  <div className="work-tags">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="work-tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                <div className="project-thumb">
+                  <Image src={project.image} alt={project.name} fill sizes="(max-width: 900px) 100vw, 33vw" />
                 </div>
-                <div className="work-stack">
-                  {project.stack.map((item) => (
-                    <span key={item}>
-                      {item}
-                      <br />
-                    </span>
-                  ))}
+                <div className="project-card-overlay">
+                  <div className="project-card-title">{project.name}</div>
+                  <div className="project-card-meta">{project.category}</div>
                 </div>
-                <div className="work-arrow">↗</div>
               </a>
             ))}
           </div>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="s" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#041f18"/>
+      <stop offset="1" stop-color="#082822"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#s)"/>
+  <g fill="#30ffb0" opacity=".18">
+    <text x="120" y="200" font-size="76" font-family="monospace">01010110010110010101</text>
+    <text x="120" y="290" font-size="76" font-family="monospace">11100010101100110010</text>
+    <text x="120" y="380" font-size="76" font-family="monospace">00111100010100110101</text>
+    <text x="120" y="470" font-size="76" font-family="monospace">10011001010111100011</text>
+  </g>
+  <rect x="390" y="170" width="420" height="460" rx="34" fill="#0c362d" stroke="#65ffc2"/>
+  <path d="M510 320v-50c0-75 60-130 130-130s130 55 130 130v50" fill="none" stroke="#9effd9" stroke-width="24"/>
+  <rect x="480" y="320" width="240" height="220" rx="26" fill="#a8ffe0"/>
+  <circle cx="600" cy="420" r="42" fill="#17745f"/>
+  <text x="350" y="95" fill="#d7ffef" font-size="58" font-family="Arial, sans-serif" font-weight="700">SecureVault Encryption</text>
+</svg>
