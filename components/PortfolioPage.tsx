@@ -18,11 +18,16 @@ export function PortfolioPage() {
   const [isMeltdown, setIsMeltdown] = useState(false);
   const [showReloadPrompt, setShowReloadPrompt] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNavScrolled, setIsNavScrolled] = useState(false);
   const workSectionRef = useRef<HTMLElement | null>(null);
   const loaderNameRef = useRef<HTMLDivElement | null>(null);
   const loaderSubRef = useRef<HTMLDivElement | null>(null);
   const loaderBgRef = useRef<HTMLDivElement | null>(null);
-  const [loaderStyle, setLoaderStyle] = useState<CSSProperties>({});
+  const [loaderStyle, setLoaderStyle] = useState<CSSProperties>({
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)"
+  });
 
   const navItems = useMemo(
     () => [
@@ -75,26 +80,46 @@ export function PortfolioPage() {
   }, []);
 
   useEffect(() => {
+    const onScroll = () => {
+      setIsNavScrolled(window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
     if (!ready) return;
 
     const centerLoader = () => {
       const node = loaderNameRef.current;
       if (!node) return;
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
+      const vv = window.visualViewport;
+      const vw = vv?.width ?? window.innerWidth;
+      const vh = vv?.height ?? window.innerHeight;
+      const scale = vv?.scale ?? 1;
+      const ox = vv?.offsetLeft ?? 0;
+      const oy = vv?.offsetTop ?? 0;
       const nw = node.offsetWidth;
       const nh = node.offsetHeight;
+      const safeX = 10 / scale;
+      const safeY = 14 / scale;
+      const left = Math.max(ox + safeX, Math.min(ox + vw - nw - safeX, ox + vw / 2 - nw / 2));
+      const top = Math.max(oy + safeY, Math.min(oy + vh - nh - safeY, oy + vh / 2 - nh / 2));
       setLoaderStyle({
-        left: `${vw / 2 - nw / 2}px`,
-        top: `${vh / 2 - nh / 2}px`
+        left: `${left}px`,
+        top: `${top}px`
       });
       if (loaderSubRef.current) {
-        loaderSubRef.current.style.top = `${vh / 2 + nh / 2 + 20}px`;
+        const subTop = Math.min(oy + vh - 18, top + nh + 20);
+        loaderSubRef.current.style.top = `${subTop}px`;
       }
     };
 
     centerLoader();
     window.addEventListener("resize", centerLoader);
+    window.visualViewport?.addEventListener("resize", centerLoader);
+    window.visualViewport?.addEventListener("scroll", centerLoader);
 
     const t = window.setTimeout(() => {
       const source = loaderNameRef.current;
@@ -137,6 +162,8 @@ export function PortfolioPage() {
     return () => {
       window.clearTimeout(t);
       window.removeEventListener("resize", centerLoader);
+      window.visualViewport?.removeEventListener("resize", centerLoader);
+      window.visualViewport?.removeEventListener("scroll", centerLoader);
     };
   }, [ready]);
 
@@ -227,7 +254,7 @@ export function PortfolioPage() {
         </>
       )}
 
-      <header className={`nav ${mainVisible ? "show" : ""}`}>
+      <header className={`nav ${mainVisible ? "show" : ""} ${isNavScrolled ? "scrolled" : ""}`}>
         <a href="#home" className="nav-name">
           ADITYA
         </a>
@@ -272,16 +299,38 @@ export function PortfolioPage() {
 
       <main className={`main ${mainVisible ? "show" : ""}`}>
         <section id="home" className="hero">
+          <div className="mobile-hero-logo" aria-hidden>
+            <div className="badge-wrap">
+              <div className="badge-ring" />
+              <div className="badge-ring-mid" />
+              <div className="badge-ring-inner" />
+              <div className="badge-cross" />
+              <svg className="badge-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <path id="txtCircleMobile" d="M150,150 m-112,0 a112,112 0 1,1 224,0 a112,112 0 1,1,-224,0" />
+                </defs>
+                <text fontFamily="var(--font-dm-mono)" fontSize="22" fill="#58422d" letterSpacing="1.6" fontWeight="700">
+                  <textPath href="#txtCircleMobile">AVAILABLE FOR WORK • FULL STACK DEV • BACKEND SYSTEMS • ADITYA RAJ • </textPath>
+                </text>
+              </svg>
+            </div>
+          </div>
+
           <div className="hero-left">
             <h1 className="hero-title">
               Full
               <br />
               Stack
               <br />
-              <em>Developer.</em>
+              <em>Developer</em>
             </h1>
             <div className="hero-rule" />
-            <p className="hero-summary">{profile.summary}</p>
+            <p className="hero-summary hero-summary-desktop">{profile.summary}</p>
+            <p className="hero-summary hero-summary-mobile">
+              <span className="summary-line">Computer Science Engineering student focused on backend</span>
+              <span className="summary-line">architecture and scalable systems. I build production-ready</span>
+              <span className="summary-line">REST APIs, data workflows, and end-to-end applications.</span>
+            </p>
             <p className="hero-micro">SRM University NCR · Software Engineering Intern @ YMS Financial</p>
             <div className="skills-tape">
               <div className="tape-track">

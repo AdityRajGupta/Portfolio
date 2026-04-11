@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Mono, DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
@@ -31,6 +31,13 @@ export const metadata: Metadata = {
       "Full stack developer portfolio with projects, experience, and backend-focused engineering work.",
     type: "website"
   }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false
 };
 
 export default function RootLayout({
