@@ -1,0 +1,17 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#12100F"/>
+  <rect x="64" y="64" width="1072" height="502" stroke="#FF8A42" stroke-width="3"/>
+  <text x="96" y="170" fill="#F7F1E8" font-family="Georgia, serif" font-size="86" font-weight="700">Aditya Raj</text>
+  <text x="96" y="242" fill="#FF8A42" font-family="Georgia, serif" font-size="54" font-style="italic">Full Stack Developer</text>
+  <text x="96" y="330" fill="#D1B79A" font-family="Arial, sans-serif" font-size="32">Backend systems · REST APIs · PostgreSQL · Next.js</text>
+  <text x="96" y="388" fill="#D1B79A" font-family="Arial, sans-serif" font-size="28">Campus management, election analytics, e-commerce, IoT research</text>
+  <g transform="translate(850 150)">
+    <circle cx="150" cy="150" r="126" stroke="#7A6248" stroke-width="2"/>
+    <circle cx="150" cy="150" r="92" stroke="#FF8A42" stroke-width="2" stroke-dasharray="12 12"/>
+    <circle cx="150" cy="150" r="58" stroke="#7A6248" stroke-width="2"/>
+    <path d="M150 24V276M24 150H276" stroke="#7A6248" stroke-opacity="0.45"/>
+    <text x="150" y="142" text-anchor="middle" fill="#F7F1E8" font-family="Georgia, serif" font-size="34" font-weight="700">Backend</text>
+    <text x="150" y="182" text-anchor="middle" fill="#FF8A42" font-family="Georgia, serif" font-size="34" font-style="italic">Focused</text>
+  </g>
+  <text x="96" y="512" fill="#F7F1E8" font-family="Arial, sans-serif" font-size="24">www.adityarajgupta.online</text>
+</svg>

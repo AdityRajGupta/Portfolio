@@ -3,9 +3,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { profile, projects, skills } from "./portfolio-data";
+import {
+  certifications,
+  experience,
+  featuredSkills,
+  hackathons,
+  profile,
+  projects,
+  research,
+  skills,
+  techPrinciples,
+  tooling
+} from "./portfolio-data";
 
-type SectionId = "home" | "work" | "about" | "experience";
+type SectionId = "home" | "work" | "about" | "experience" | "stack" | "contact";
 
 export function PortfolioPage() {
   const [ready, setReady] = useState(false);
@@ -33,7 +44,9 @@ export function PortfolioPage() {
     () => [
       { id: "work", label: "Work" },
       { id: "about", label: "About" },
-      { id: "experience", label: "Journey" }
+      { id: "experience", label: "Experience" },
+      { id: "stack", label: "Stack" },
+      { id: "contact", label: "Contact" }
     ] as const,
     []
   );
@@ -138,7 +151,7 @@ export function PortfolioPage() {
       const dy = targetY - start.top;
 
       source.style.transformOrigin = "top left";
-      source.style.transition = "transform 1.25s cubic-bezier(0.76,0,0.24,1), opacity 0.3s ease";
+      source.style.transition = "transform 1.35s cubic-bezier(0.16,1,0.3,1), opacity 0.45s ease";
       source.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
 
       const fill = source.querySelector(".ln-fill") as HTMLElement | null;
@@ -168,7 +181,7 @@ export function PortfolioPage() {
   }, [ready]);
 
   useEffect(() => {
-    const ids: SectionId[] = ["home", "work", "about", "experience"];
+    const ids: SectionId[] = ["home", "work", "about", "experience", "stack", "contact"];
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el));
@@ -327,11 +340,11 @@ export function PortfolioPage() {
             <div className="hero-rule" />
             <p className="hero-summary hero-summary-desktop">{profile.summary}</p>
             <p className="hero-summary hero-summary-mobile">
-              <span className="summary-line">Computer Science Engineering student focused on backend</span>
-              <span className="summary-line">architecture and scalable systems. I build production-ready</span>
-              <span className="summary-line">REST APIs, data workflows, and end-to-end applications.</span>
+              <span className="summary-line">Computer Science Engineering student focused on</span>
+              <span className="summary-line">backend architecture and scalable systems.</span>
+              <span className="summary-line">I build production-ready REST APIs and apps.</span>
             </p>
-            <p className="hero-micro">SRM University NCR · Software Engineering Intern @ YMS Financial</p>
+            <p className="hero-micro">SRM University NCR · Website Developer Intern @ TiniNest</p>
             <div className="skills-tape">
               <div className="tape-track">
                 {[...skills.slice(0, 10), ...skills.slice(0, 10)].map((skill, idx) => (
@@ -343,8 +356,11 @@ export function PortfolioPage() {
             </div>
             <div className="hero-cta">
               <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="btn-primary">
-                 <span>LinkedIn</span>
-                    </a>
+                <span>LinkedIn</span>
+              </a>
+              <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
+                View CV
+              </a>
               <a href={profile.github} target="_blank" rel="noopener noreferrer" className="btn-secondary">
                 View GitHub →
               </a>
@@ -413,22 +429,58 @@ export function PortfolioPage() {
           </div>
           <div className="projects-grid">
             {filteredProjects.map((project) => (
-              <a
+              <article
                 key={project.id}
                 data-project-id={project.id}
+                tabIndex={0}
                 className={`project-card ${visibleProjects.includes(project.id) ? "visible" : ""}`}
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 <div className="project-thumb">
                   <Image src={project.image} alt={project.name} fill sizes="(max-width: 900px) 100vw, 33vw" />
                 </div>
-                <div className="project-card-overlay">
-                  <div className="project-card-title">{project.name}</div>
-                  <div className="project-card-meta">{project.category}</div>
+                <div className="project-card-body">
+                  <div className="project-card-kicker">
+                    <span>{project.idx}</span>
+                    <span>{project.category}</span>
+                  </div>
+                  <h3 className="project-card-title">{project.name}</h3>
+                  <p className="project-card-desc">{project.description}</p>
+                  <div className="project-actions">
+                    <a href={project.links.live} target="_blank" rel="noopener noreferrer" className="mini-btn primary">
+                      Live Demo
+                    </a>
+                    {project.links.github ? (
+                      <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="mini-btn">
+                        GitHub
+                      </a>
+                    ) : (
+                      <span className="mini-btn muted">Repo on request</span>
+                    )}
+                  </div>
+                  <p className="project-role">{project.role}</p>
+
+                  <div className="project-metrics" aria-label={`${project.name} live metrics`}>
+                    {project.metrics.map((metric) => (
+                      <div key={`${project.id}-${metric.label}`} className="project-metric">
+                        <b>{metric.value}</b>
+                        <span>{metric.label}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <ul className="psi-list">
+                    {project.problemSolutionImpact.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+
+                  <div className="tech-badges">
+                    {project.stack.map((tech) => (
+                      <span key={`${project.id}-${tech}`}>{tech}</span>
+                    ))}
+                  </div>
                 </div>
-              </a>
+              </article>
             ))}
           </div>
         </section>
@@ -443,7 +495,7 @@ export function PortfolioPage() {
             </h2>
             <p className="about-text">
               Skilled in API design, database modeling, debugging, and scalable backend workflows. I enjoy solving product
-              problems with clean abstractions and shipping reliable software.
+              problems with clean abstractions and shipping reliable software across solo builds and internship work.
             </p>
           </div>
           <div>
@@ -464,10 +516,10 @@ export function PortfolioPage() {
                 &nbsp;&nbsp;<span className="c-str">{`"uni"`}</span>: <span className="c-str">{`"SRM, NCR Campus"`}</span>,
               </div>
               <div>
-                &nbsp;&nbsp;<span className="c-str">{`"cgpa"`}</span>: <span className="c-num">8.45</span>,
+                &nbsp;&nbsp;<span className="c-str">{`"cgpa"`}</span>: <span className="c-num">8.42</span>,
               </div>
               <div>
-                &nbsp;&nbsp;<span className="c-str">{`"intern"`}</span>: <span className="c-str">{`"YMS Financial"`}</span>,
+                &nbsp;&nbsp;<span className="c-str">{`"intern"`}</span>: <span className="c-str">{`"TiniNest Pvt. Ltd."`}</span>,
               </div>
               <div>
                 &nbsp;&nbsp;<span className="c-str">{`"status"`}</span>: <span className="c-str">{`"open_to_work"`}</span>
@@ -476,16 +528,16 @@ export function PortfolioPage() {
             </div>
             <div className="stats-row">
               <div className="stat">
-                <div className="stat-n">8.45</div>
+                <div className="stat-n">8.42</div>
                 <div className="stat-l">CGPA</div>
               </div>
               <div className="stat">
-                <div className="stat-n">5</div>
+                <div className="stat-n">4</div>
                 <div className="stat-l">Projects</div>
               </div>
               <div className="stat">
-                <div className="stat-n">1yr</div>
-                <div className="stat-l">Internship</div>
+                <div className="stat-n">2</div>
+                <div className="stat-l">Internships</div>
               </div>
               <div className="stat">
                 <div className="stat-n">2023</div>
@@ -495,10 +547,53 @@ export function PortfolioPage() {
           </div>
         </section>
 
-        <section className="skills-section reveal-block">
+        <section id="stack" className="skills-section reveal-block">
           <div className="sec-head">
-            <h2 className="sec-title">Tech Stack</h2>
+            <h2 className="sec-title">Architecture & Tech Stack</h2>
             <span className="sec-meta">{skills.length} SKILLS</span>
+          </div>
+          <div className="featured-skills">
+            {featuredSkills.map((skill) => (
+              <article key={skill.name}>
+                <b>{skill.name}</b>
+                <span>{skill.context}</span>
+              </article>
+            ))}
+          </div>
+          <div className="principles-grid">
+            <div>
+              <p className="about-label">Tech principles</p>
+              {techPrinciples.map((principle) => (
+                <p key={principle} className="principle-line">
+                  {principle}
+                </p>
+              ))}
+            </div>
+            <div>
+              <p className="about-label">Tooling</p>
+              <div className="tooling-grid">
+                {tooling.map((tool) => (
+                  <span key={tool}>{tool}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="system-diagrams">
+            {projects
+              .filter((project) => project.caseStudy)
+              .map((project) => (
+                <article key={`${project.id}-stack`} className="system-card">
+                  <h3>{project.name}</h3>
+                  <div className="diagram compact">
+                    {project.caseStudy?.architecture.map((node, idx) => (
+                      <div key={`${project.id}-system-${node}`} className="diagram-node">
+                        <span>{node}</span>
+                        {idx < (project.caseStudy?.architecture.length ?? 0) - 1 && <i />}
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              ))}
           </div>
           <div className="skills-grid">
             {skills.map((skill) => (
@@ -509,20 +604,78 @@ export function PortfolioPage() {
           </div>
         </section>
 
-        <section id="experience" className="timeline-section reveal-block">
+        <section id="experience" className="experience-section reveal-block">
+          <div className="sec-head">
+            <h2 className="sec-title">Experience</h2>
+            <span className="sec-meta">ROLE HIGHLIGHTS</span>
+          </div>
+          <div className="experience-grid">
+            {experience.map((item) => (
+              <article key={`${item.company}-${item.role}`} className="experience-card">
+                <div className="experience-top">
+                  <div>
+                    <p className="timeline-year">{item.period}</p>
+                    <h3 className="timeline-title">{item.role}</h3>
+                    <p className="timeline-sub">{item.company}</p>
+                  </div>
+                  <span>{item.context}</span>
+                </div>
+                <ul className="psi-list">
+                  {item.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+                <div className="project-metrics">
+                  {item.outcomes.map((outcome) => (
+                    <div key={`${item.company}-${outcome.label}`} className="project-metric">
+                      <b>{outcome.value}</b>
+                      <span>{outcome.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="timeline-section reveal-block">
           <div className="sec-head">
             <h2 className="sec-title">Experience & Education</h2>
             <span className="sec-meta">CURRENT JOURNEY</span>
           </div>
           <div className="timeline-list">
             <article className="timeline-item">
-              <div className="timeline-year">2025 — 2026</div>
+              <div className="timeline-year">Apr 2026 — Present</div>
+              <div>
+                <h3 className="timeline-title">Website Developer & Manager Intern</h3>
+                <p className="timeline-sub">TiniNest Pvt. Ltd.</p>
+                <p className="timeline-desc">
+                  Developed and managed a production-ready e-commerce platform using React and Next.js. Implemented backend
+                  workflows, database integration, and deployment processes, and elevated performance through modular
+                  component architecture.
+                </p>
+              </div>
+            </article>
+            <article className="timeline-item">
+              <div className="timeline-year">Nov 2025 — Apr 2026</div>
               <div>
                 <h3 className="timeline-title">Software Engineering Intern</h3>
                 <p className="timeline-sub">YMS Financial Pvt. Ltd.</p>
                 <p className="timeline-desc">
-                  Developed backend workflows and APIs supporting election analytics, campaign management, constituency
-                  tracking, and prediction workflows in a production-oriented setting.
+                  Produced backend workflows and RESTful APIs powering a live election analytics platform across 4+ modules.
+                  Delivered campaign management features for constituency tracking, booth-level prediction, and reporting,
+                  contributing to multiple releases and end-to-end integration with React and Node.js services.
+                </p>
+              </div>
+            </article>
+            <article className="timeline-item">
+              <div className="timeline-year">Jan 2026 — Present</div>
+              <div>
+                <h3 className="timeline-title">Research: Real-Time IoT Monitoring Framework</h3>
+                <p className="timeline-sub">Edge-Cloud Intelligence (Draft, unpublished)</p>
+                <p className="timeline-desc">
+                  Designed a five-layer IoT architecture with MQTT, Apache Kafka, and edge-cloud ML; achieved sub-millisecond
+                  edge latency (0.02–0.05 ms), under-20 ms end-to-end latency, and 95% anomaly detection accuracy.
                 </p>
               </div>
             </article>
@@ -532,11 +685,130 @@ export function PortfolioPage() {
                 <h3 className="timeline-title">B.Tech in Computer Science Engineering</h3>
                 <p className="timeline-sub">SRM University, NCR Campus, Ghaziabad</p>
                 <p className="timeline-desc">
-                  Focused on data structures, backend architecture, APIs, and full-stack development with strong
+                  CGPA: 8.42. Focused on data structures, backend architecture, APIs, and full-stack development with strong
                   problem-solving fundamentals.
                 </p>
               </div>
             </article>
+            <article className="timeline-item">
+              <div className="timeline-year">2026</div>
+              <div>
+                <h3 className="timeline-title">Hack-2-Hustle Hackathon</h3>
+                <p className="timeline-sub">Masters&apos; Union, Cyberpark, Gurugram</p>
+                <p className="timeline-desc">
+                  Shortlisted through multiple competitive rounds. Led development of an Algorithm Runtime Visualizer and
+                  delivered the live demo with a 3-member team under tight, overnight timelines.
+                </p>
+              </div>
+            </article>
+            <article className="timeline-item">
+              <div className="timeline-year">Jan — Apr 2026</div>
+              <div>
+                <h3 className="timeline-title">Natural Language Processing</h3>
+                <p className="timeline-sub">NPTEL / IIT Kharagpur (SWAYAM)</p>
+                <p className="timeline-desc">
+                  12-week course, 4 credits, Certificate No: NPTEL26CS45S1055101305.
+                </p>
+              </div>
+            </article>
+            <article className="timeline-item">
+              <div className="timeline-year">2025</div>
+              <div>
+                <h3 className="timeline-title">Member, Gamer&apos;s Creed — Esports Society</h3>
+                <p className="timeline-sub">SRM University, NCR Campus</p>
+                <p className="timeline-desc">
+                  Active member of the university esports community, participating in society events, gaming tournaments,
+                  and inter-college outreach activities.
+                </p>
+              </div>
+            </article>
+            <article className="timeline-item">
+              <div className="timeline-year">2024</div>
+              <div>
+                <h3 className="timeline-title">Inter-College Badminton Tournament</h3>
+                <p className="timeline-sub">KIET University — Representing SRM University, NCR Campus</p>
+                <p className="timeline-desc">
+                  Represented SRM University in an inter-college badminton tournament, demonstrating competitive
+                  sportsmanship and team representation.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section className="research-section reveal-block">
+          <div className="sec-head">
+            <h2 className="sec-title">Research</h2>
+            <span className="sec-meta">DRAFT OUTCOMES</span>
+          </div>
+          <div className="research-grid">
+            {research.map((item) => (
+              <article key={item.title} className="research-card">
+                <p className="about-label">{item.status}</p>
+                <h3>{item.title}</h3>
+                <p className="timeline-sub">{item.authors}</p>
+                <ul className="psi-list">
+                  {item.outcomes.map((outcome) => (
+                    <li key={outcome}>{outcome}</li>
+                  ))}
+                </ul>
+                <div className="project-actions">
+                  {item.links.map((link) => (
+                    <a key={link.label} href={link.href} className="mini-btn">
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="credential-section reveal-block">
+          <div className="sec-head">
+            <h2 className="sec-title">Certifications & Hackathons</h2>
+            <span className="sec-meta">VISIBLE SIGNALS</span>
+          </div>
+          <div className="credential-grid">
+            {certifications.map((cert) => (
+              <article key={cert.name} className="credential-card">
+                <p className="about-label">{cert.period}</p>
+                <h3>{cert.name}</h3>
+                <p>{cert.issuer}</p>
+                <span>{cert.detail}</span>
+              </article>
+            ))}
+            {hackathons.map((hackathon) => (
+              <article key={hackathon.name} className="credential-card">
+                <p className="about-label">Hackathon</p>
+                <h3>{hackathon.name}</h3>
+                <p>{hackathon.host}</p>
+                <span>{hackathon.detail}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="contact" className="contact-section reveal-block">
+          <div>
+            <p className="about-label">Contact</p>
+            <h2 className="sec-title">Let&apos;s build something reliable.</h2>
+            <p className="contact-copy">
+              I&apos;m open to backend/full-stack internships, freelance web apps, and product builds where APIs, data,
+              and user workflows need careful engineering.
+            </p>
+          </div>
+          <div className="contact-links">
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+            <a href={profile.github} target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
+            <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
+              View CV
+            </a>
           </div>
         </section>
       </main>
