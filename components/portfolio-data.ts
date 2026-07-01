@@ -49,7 +49,7 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/adityaa24",
   instagram: "https://www.instagram.com/adityarajgupta.ig/",
   siteUrl: "https://www.adityarajgupta.online",
-  resumeUrl: "/aditya-raj-resume.pdf",
+  resumeUrl: "/aditya-raj-cv-2026.pdf",
   availability: "Available for backend/full-stack internships, freelance builds, and production web work.",
   preferredRoles: ["Backend Developer", "Full-Stack Developer", "Software Engineering Intern", "Freelance Web Apps"],
   currentlyWorkingOn:
